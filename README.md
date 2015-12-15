@@ -1,6 +1,6 @@
 # Adventofcode
 
-**TODO: Add description**
+Learning elixir by using http://adventofcode.com/
 
 ## Installation
 
