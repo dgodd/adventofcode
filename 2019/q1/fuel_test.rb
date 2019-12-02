@@ -54,9 +54,9 @@ describe 'fuel' do
 
   it 'answer: part 2' do
     subtotal = FUEL_DATA.sum do |mass|
-      fuel(mass)
+      fuel_part2(mass)
     end
-    assert_equal fuel_part2(subtotal), 1_617_733
+    assert_equal subtotal, 4_850_462
   end
 end
 
