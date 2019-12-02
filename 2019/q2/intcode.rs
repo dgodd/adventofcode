@@ -49,7 +49,7 @@ mod tests {
 
     #[test]
     fn answer_1() {
-        let mut input = INPUT.clone();
+        let mut input = INPUT;
         input[1] = 12;
         input[2] = 2;
         assert_eq!(5866714, intcode(&input));
@@ -61,7 +61,7 @@ mod tests {
         let mut verb = 0;
         for x in 0..100 {
             for y in 0..100 {
-                let mut input = INPUT.clone();
+                let mut input = INPUT;
                 input[1] = x;
                 input[2] = y;
                 if intcode(&input) == 19690720 {
