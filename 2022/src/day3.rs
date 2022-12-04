@@ -4,7 +4,7 @@ pub fn input_generator(input: &str) -> Vec<String> {
 }
 
 fn priority(c: char) -> u32 {
-        let mut num = c as u32;
+        let num = c as u32;
         match num {
             (65..=90) => num - 64 + 26,
             (97..=122) => num - 96,
