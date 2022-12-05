@@ -37,23 +37,23 @@ pub fn solve_part2(input: &(usize, Vec<u16>)) -> u32 {
     let mut co2: u16 = 0;
     for i in 0..len {
         let count_of_ones: u16 = data_o2.iter().map(|d| (d >> (len - 1 - i)) & 0x1).sum();
-        let most_common = if (data_o2.len() as i32) - ((count_of_ones * 2) as i32) > 0 { 0 } else { 1 };
-        // println!("I: {i} -- {count_of_ones} -- {most_common}");
+        let most_common = if (data_o2.len() as i32) - ((count_of_ones * 2) as i32) >= 0 { 0 } else { 1 };
+        println!("I: {i} -- {count_of_ones} -- {most_common}");
 
         data_o2.retain(|d| (d >> (len - 1 - i)) & 0x1 == most_common);
-        // println!("DATA: {:?}", &data_o2);
+        println!("DATA O2: {:?}", &data_o2);
         if data_o2.len() == 1 {
             oxygen = data_o2[0];
         }
 
         data_co2.retain(|d| (d >> (len - 1 - i)) & 0x1 != most_common);
-        // println!("DATA: {:?}", &data_co2);
+        println!("DATA CO2: {:?}", &data_co2);
         if data_co2.len() == 1 {
             co2 = data_co2[0];
         }
     }
-    // println!("OXYGEN: {oxygen:b}");
-    // println!("CO2: {co2:b}");
+    println!("OXYGEN: {oxygen:b}");
+    println!("CO2:    {co2:b}");
 
     (oxygen as u32) * (co2 as u32)
 }
