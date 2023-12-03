@@ -1,13 +1,22 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    excon (0.105.0)
     minitest (5.20.0)
+    nokogiri (1.15.5-arm64-darwin)
+      racc (~> 1.4)
+    racc (1.7.3)
+    reverse_markdown (2.1.1)
+      nokogiri
 
 PLATFORMS
   arm64-darwin-22
 
 DEPENDENCIES
+  excon
   minitest
+  nokogiri
+  reverse_markdown
 
 BUNDLED WITH
    2.4.6
