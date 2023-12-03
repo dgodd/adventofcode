@@ -23,6 +23,7 @@ class Day1 < Minitest::Test
   def part2(filename)
     txt = File.read(filename)
     lines = txt.split("\n").map do |l|
+      l2 = "#{l}"
       arr = []
       while l.length > 0
         if l.match(/^\d/)
@@ -31,13 +32,13 @@ class Day1 < Minitest::Test
           NUMBERS.each.with_index do |w,idx|
             if l.start_with?(w)
               arr << idx + 1
-              l = l[(w.length - 1)..]
               break
             end
           end
         end
         l = l[1..]
       end
+      # p [arr, l2, (arr.first * 10) + arr.last]
       arr
     end
     lines.map { (_1.first * 10) + _1.last }.sum
@@ -50,6 +51,6 @@ class Day1 < Minitest::Test
 
   def test_part2
     num = part2('fixtures/day1/input1.txt')
-    assert_equal num, 55309
+    assert_equal num, 55291
   end
 end
