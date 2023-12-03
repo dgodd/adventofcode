@@ -13,7 +13,7 @@ class Day3 < Minitest::Test
     end.flatten
   end
 
-  def part1(filename)
+  def parse(filename)
     symbols = {}
     vals = []
     lines = File.read(filename).split("\n")
@@ -28,16 +28,18 @@ class Day3 < Minitest::Test
           vals << [v, Pos.new(x: x, y: y)]
           x += v.to_s.length - 1
         else
-          symbols[Pos.new(x: x, y: y)] = 1
+          symbols[Pos.new(x: x, y: y)] = v
         end
         x += 1
       end
     end
-    # p symbols.keys
+    [symbols, vals]
+  end
+
+  def part1(filename)
+    (symbols, vals) = parse(filename)
     found = vals.map do |(val, pos)|
-      # p [val, pos, neighbours(val, pos)]
       if neighbours(val, pos).any? { |pos| symbols[pos] }
-        # puts " ---- FOUND"
         val
       else
         0
@@ -54,5 +56,35 @@ class Day3 < Minitest::Test
   def test_part1
     num = part1('fixtures/day3/input.txt')
     assert_equal num, 549908
+  end
+
+  def part2(filename)
+    (symbols, vals) = parse(filename)
+    found = {}
+    vals.each do |(val, pos)|
+      neighbours(val, pos).each do |pos2|
+        if symbols[pos2] == '*'
+          found[pos2] ||= []
+          found[pos2] << val
+        end
+      end
+    end
+    found.map do |pos, vals|
+      if vals.length == 2
+        vals.reduce(:*)
+      else
+        0
+      end
+    end.sum
+  end
+
+  def test_sample2
+    num = part2('fixtures/day3/sample1.txt')
+    assert_equal num, 467835
+  end
+
+  def test_part2
+    num = part2('fixtures/day3/input.txt')
+    assert_equal num, 81166799
   end
 end
