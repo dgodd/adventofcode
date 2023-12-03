@@ -8,7 +8,7 @@ require 'reverse_markdown'
 # doc = Nokogiri::HTML(res.body)
 # days = doc.css('pre.calendar a').map { |a| a[:href] }
 
-day = '3'
+day = '4'
 res = Excon.get("https://adventofcode.com/2023/day/#{day}", headers: { Cookie: "session=#{ENV['AOC_COOKIE']}" })
 doc = Nokogiri::HTML(res.body)
 FileUtils.mkdir_p("fixtures/day#{day}")
