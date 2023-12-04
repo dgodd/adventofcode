@@ -30,4 +30,27 @@ class Day4 < Minitest::Test
     num = part1('fixtures/day4/input.txt')
     assert_equal num, 21105
   end
+
+  def part2(filename)
+    data = parse(filename)
+    data.each { |d| d[3] = 1 }
+    data.each do |(num, winning, actual, clones)|
+      reps = (winning & actual).length
+      clones.times do
+        reps.times { |i| data[num + i][3] += 1 }
+      end
+    end
+    # data.each { |d| p d }
+    data.map { |d| d[3] || 0 }.sum
+  end
+
+  def test_sample2
+    num = part2('fixtures/day4/sample1.txt')
+    assert_equal 30, num
+  end
+
+  def test_part2
+    num = part2('fixtures/day4/input.txt')
+    assert_equal num, 5329815
+  end
 end
