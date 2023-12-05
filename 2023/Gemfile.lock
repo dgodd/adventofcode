@@ -3,6 +3,8 @@ GEM
   specs:
     excon (0.105.0)
     minitest (5.20.0)
+    minitest-focus (1.4.0)
+      minitest (>= 4, < 6)
     nokogiri (1.15.5-arm64-darwin)
       racc (~> 1.4)
     racc (1.7.3)
@@ -15,6 +17,7 @@ PLATFORMS
 DEPENDENCIES
   excon
   minitest
+  minitest-focus
   nokogiri
   reverse_markdown
 

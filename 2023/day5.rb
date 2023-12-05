@@ -1,4 +1,5 @@
 require 'minitest/autorun'
+require 'minitest/focus'
 
 class Day5 < Minitest::Test
   def parse(filename)
@@ -15,6 +16,7 @@ class Day5 < Minitest::Test
         curr_map << l.split(/\s+/).map(&:to_i)
       end
     end
+    maps << curr_map
     [seeds, maps]
   end
 
@@ -42,6 +44,19 @@ class Day5 < Minitest::Test
     end.min
   end
 
+  # focus def test_parse
+  #   (seeds, maps) = parse('fixtures/day5/input.txt')
+  #   File.open('day5_out.txt', 'w') do |f|
+  #     f.write "seeds: #{seeds.join(' ')}\n\n"
+  #     maps.each do |m1|
+  #       m1.each do |m2|
+  #         f.puts m2.join(' ')
+  #       end
+  #       f.write "\n"
+  #     end
+  #   end
+  # end
+
   def test_part1_map
     assert_equal 10, part1_map(10, [])
     assert_equal 10, part1_map(10, [[[0, 5, 2]]])
@@ -56,6 +71,6 @@ class Day5 < Minitest::Test
 
   def test_part1
     num = part1('fixtures/day5/input.txt')
-    assert_equal 318171373, num
+    assert_equal 621354867, num
   end
 end
