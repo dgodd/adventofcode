@@ -11,6 +11,7 @@ doc = Nokogiri::HTML(res.body)
 days = doc.css('pre.calendar a').map { |a| a[:href] }
 
 day = days.first.match(/(\d+)$/)[1].to_i
+FileUtils.mkdir_p("fixtures/day#{day}")
 system("aoc", "download", "--day=#{day}", "--input-file=fixtures/day#{day}/input.txt", "--puzzle-file=fixtures/day#{day}/README.txt", "--overwrite")
 
 # day = '4'
