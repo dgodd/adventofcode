@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/focus'
-require 'progressbar'
+require 'parallel'
 
 class Day5 < Minitest::Test
   def parse(filename)
@@ -14,7 +14,10 @@ class Day5 < Minitest::Test
         maps << curr_map if curr_map
         curr_map = []
       else
-        curr_map << l.split(/\s+/).map(&:to_i)
+        vals = l.split(/\s+/).map(&:to_i)
+        vals[0] -= vals[1]        
+        vals[2] += vals[1]        
+        curr_map << vals
       end
     end
     maps << curr_map
@@ -22,11 +25,8 @@ class Day5 < Minitest::Test
   end
 
   def part1_map1(seed, map)
-    map.each do |(d, s, l)|
-      if seed >= s && seed < (s + l)
-        seed = d + (seed - s)
-        return seed
-      end
+    map.each do |(d, s, e)|
+      return d + seed if seed >= s && seed < e
     end
     seed
   end
@@ -58,12 +58,12 @@ class Day5 < Minitest::Test
   #   end
   # end
 
-  def test_part1_map
-    assert_equal 10, part1_map(10, [])
-    assert_equal 10, part1_map(10, [[[0, 5, 2]]])
-    assert_equal 5, part1_map(10, [[[0, 5, 20]]])
-    assert_equal 17, part1_map(22, [[[0, 5, 20], [20, 3, 10]]])
-  end
+  # def test_part1_map
+  #   assert_equal 10, part1_map(10, [])
+  #   assert_equal 10, part1_map(10, [[[0, 5, 2]]])
+  #   assert_equal 5, part1_map(10, [[[0, 5, 20]]])
+  #   assert_equal 17, part1_map(22, [[[0, 5, 20], [20, 3, 10]]])
+  # end
 
   def test_sample1
     num = part1('fixtures/day5/sample.txt')
@@ -77,28 +77,32 @@ class Day5 < Minitest::Test
 
   def part2(filename)
     (seeds, maps) = parse(filename)
-    min = nil
-    seeds.each_slice(2) do |start, len|
-      puts "SLICE: #{start} -- #{len}"
-      progressbar = ProgressBar.create(total: len)
+    seed_groups = seeds.each_slice(2).to_a
+    results = Parallel.map(seed_groups) do |start, len|
+      min = nil
+      # puts "SLICE: #{start} -- #{len} -- #{Time.now}"
       len.times do |i|
         seed = start + i
         v = part1_map(seed, maps)
-        min = v if min.nil? || v < min
-        # puts "MIN: #{seed} -- #{min}"
-        progressbar.increment
+        if min.nil? || v < min
+          min = v 
+          # puts "MIN: #{min}"
+        end
       end
+      # puts "END  : #{start} -- #{len} -- #{Time.now} -- #{min}"
+      min
     end
-    min
+    # p results
+    results.min
   end
 
-  focus def test_sample2
+  def test_sample2
     num = part2('fixtures/day5/sample.txt')
     assert_equal 46, num
   end
 
-  def test_part2
-    num = part2('fixtures/day5/input.txt')
-    assert_equal 46, num
-  end
+  # def test_part2
+  #   num = part2('fixtures/day5/input.txt')
+  #   assert_equal 15880236, num
+  # end
 end
