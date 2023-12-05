@@ -7,6 +7,7 @@ GEM
       minitest (>= 4, < 6)
     nokogiri (1.15.5-arm64-darwin)
       racc (~> 1.4)
+    progressbar (1.13.0)
     racc (1.7.3)
     reverse_markdown (2.1.1)
       nokogiri
@@ -19,6 +20,7 @@ DEPENDENCIES
   minitest
   minitest-focus
   nokogiri
+  progressbar
   reverse_markdown
 
 BUNDLED WITH

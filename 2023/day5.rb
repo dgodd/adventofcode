@@ -1,5 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/focus'
+require 'progressbar'
 
 class Day5 < Minitest::Test
   def parse(filename)
@@ -72,5 +73,32 @@ class Day5 < Minitest::Test
   def test_part1
     num = part1('fixtures/day5/input.txt')
     assert_equal 621354867, num
+  end
+
+  def part2(filename)
+    (seeds, maps) = parse(filename)
+    min = nil
+    seeds.each_slice(2) do |start, len|
+      puts "SLICE: #{start} -- #{len}"
+      progressbar = ProgressBar.create(total: len)
+      len.times do |i|
+        seed = start + i
+        v = part1_map(seed, maps)
+        min = v if min.nil? || v < min
+        # puts "MIN: #{seed} -- #{min}"
+        progressbar.increment
+      end
+    end
+    min
+  end
+
+  focus def test_sample2
+    num = part2('fixtures/day5/sample.txt')
+    assert_equal 46, num
+  end
+
+  def test_part2
+    num = part2('fixtures/day5/input.txt')
+    assert_equal 46, num
   end
 end
