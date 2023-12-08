@@ -40,4 +40,26 @@ class Day8 < Minitest::Test
     num = part1('fixtures/day8/input.txt')
     assert_equal 20221, num
   end
+
+  def part2(filename)
+    (seq, data) = parse(filename)
+    ps = data.keys.grep(/A$/)
+    (0..).each do |steps|
+      instr = seq[steps % seq.length]
+      ps = ps.map { |pos| data[pos][instr] }
+p [steps, *ps]
+      return steps + 1 if ps.all? { |pos| pos.match(/Z$/) }
+    end
+  end
+
+  def test_sample2
+    num = part2('fixtures/day8/sample2.txt')
+    assert_equal 6, num
+  end
+
+  focus def test_part2
+    num = part2('fixtures/day8/input.txt')
+    # At position [82564529, "TVP", "PXR", "MNT", "DKD", "PKG", "TRS"] with no answer
+    assert_equal 6, num
+  end
 end
