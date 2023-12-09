@@ -41,15 +41,28 @@ class Day8 < Minitest::Test
     assert_equal 20221, num
   end
 
+  def lcm(numbers)
+    x = numbers.max
+    out = x
+    until numbers.all? { |n| out % n == 0 }
+      out += x
+    end
+    out
+  end
+
   def part2(filename)
     (seq, data) = parse(filename)
     ps = data.keys.grep(/A$/)
-    (0..).each do |steps|
-      instr = seq[steps % seq.length]
-      ps = ps.map { |pos| data[pos][instr] }
-p [steps, *ps]
-      return steps + 1 if ps.all? { |pos| pos.match(/Z$/) }
+    loop_sizes = ps.map do |pos|
+      steps = 0
+      while !pos.match(/Z$/)
+        instr = seq[steps % seq.length]
+        pos = data[pos][instr]
+        steps += 1
+      end
+      steps
     end
+    lcm(loop_sizes)
   end
 
   def test_sample2
@@ -57,9 +70,8 @@ p [steps, *ps]
     assert_equal 6, num
   end
 
-  focus def test_part2
+  def test_part2
     num = part2('fixtures/day8/input.txt')
-    # At position [82564529, "TVP", "PXR", "MNT", "DKD", "PKG", "TRS"] with no answer
-    assert_equal 6, num
+    assert_equal 14616363770447, num
   end
 end
