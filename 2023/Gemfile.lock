@@ -3,7 +3,9 @@ GEM
   specs:
     excon (0.105.0)
     minitest (5.20.0)
-    nokogiri (1.15.5-arm64-darwin)
+    nokogiri (1.15.6-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.15.6-x86_64-linux)
       racc (~> 1.4)
     racc (1.7.3)
     reverse_markdown (2.1.1)
@@ -11,6 +13,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   excon
