@@ -1,38 +1,46 @@
 #[aoc_generator(day11)]
-fn parse_input_day11(input: &str) -> Vec<Vec<u8>> {
-    input.lines().map(|l| l.as_bytes().to_vec()).collect()
+fn parse_input_day11(input: &str) -> Vec<(usize, usize)> {
+    let vecs: Vec<_> = input.lines().map(|l| l.as_bytes().to_vec()).collect();
+    find_hashes(&vecs)
 }
 
 #[aoc(day11, part1)]
-pub fn part1(input: &Vec<Vec<u8>>) -> u32 {
-    let input2 = &expand_columns(input);
-    let input3 = &expand_rows(input2);
-    let hashes = find_hashes(input3);
+pub fn part1(input: &Vec<(usize, usize)>) -> u32 {
+    let input2 = expand(input);
     let mut count = 0;
-    for (i, pos) in hashes.iter().enumerate() {
+    for (i, pos) in input2.iter().enumerate() {
         // println!("PAIR: {:?} => {:?}", i, pos);
-        for other in hashes[i + 1..].iter() {
+        for other in input2[i + 1..].iter() {
             let dist =
                 (pos.0 as i32 - other.0 as i32).abs() + (pos.1 as i32 - other.1 as i32).abs();
             // println!("  OTHER: {:?} -> {:?}", other, dist);
             count += dist;
         }
     }
-    // println!("COUNT: {}", count);
     count as u32
 }
 
-pub fn expand_rows(input: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
-    input
-        .into_iter()
-        .flat_map(|x| {
-            if x.len() > 0 && x.iter().all(|y| *y == '.' as u8) {
-                [x.clone(), x.clone()].to_vec()
-            } else {
-                [x.clone()].to_vec()
+pub fn expand(input: &Vec<(usize, usize)>) -> Vec<(usize, usize)> {
+    let mut out = input.clone();
+    for i in (0..out.len()).rev() {
+        if !out.iter().any(|pair| pair.0 == i) {
+            println!("EXPAND 0: {}", i);
+            for pair in out.iter_mut() {
+                if pair.0 > i {
+                    pair.0 += 1;
+                }
             }
-        })
-        .collect()
+        }
+        if !out.iter().any(|pair| pair.1 == i) {
+            println!("EXPAND 1: {}", i);
+            for pair in out.iter_mut() {
+                if pair.1 > i {
+                    pair.1 += 1;
+                }
+            }
+        }
+    }
+    out
 }
 
 pub fn expand_columns(input: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
@@ -77,34 +85,14 @@ mod tests {
             b".......#..".to_vec(),
             b"#...#.....".to_vec(),
         ];
-        assert_eq!(part1(&input), 374);
+        let hashes = find_hashes(&input);
+        assert_eq!(part1(&hashes), 374);
     }
 
     #[test]
-    fn expand_rows_example() {
-        assert_eq!(expand_rows(&vec!(b"".to_vec())), [[]]);
-        assert_eq!(expand_rows(&vec!(b".#.".to_vec())), [b".#.".to_vec()]);
-        assert_eq!(
-            expand_rows(&vec!(b"...".to_vec())),
-            [b"...".to_vec(), b"...".to_vec()]
-        );
-        assert_eq!(
-            expand_rows(&vec!(b"#..".to_vec(), b"...".to_vec(), b".#.".to_vec())),
-            [
-                b"#..".to_vec(),
-                b"...".to_vec(),
-                b"...".to_vec(),
-                b".#.".to_vec()
-            ]
-        );
-    }
-    #[test]
-    fn expand_columns_example() {
-        assert_eq!(expand_columns(&vec!(b"".to_vec())), [[]]);
-        assert_eq!(
-            expand_columns(&vec!(b"#.#.".to_vec())),
-            [b"#..#..".to_vec()]
-        );
+    fn expand_example() {
+        assert_eq!(expand(&vec!((0, 0), (0, 2))), [(0, 0), (0, 3)]);
+        assert_eq!(expand(&vec!((0, 0), (2, 0))), [(0, 0), (3, 0)]);
     }
 
     #[test]
