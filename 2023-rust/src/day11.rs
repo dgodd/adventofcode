@@ -1,30 +1,40 @@
 #[aoc_generator(day11)]
-fn parse_input_day11(input: &str) -> Vec<(usize, usize)> {
+fn parse_input_day11(input: &str) -> Vec<(u64, u64)> {
     let vecs: Vec<_> = input.lines().map(|l| l.as_bytes().to_vec()).collect();
     find_hashes(&vecs)
 }
 
 #[aoc(day11, part1)]
-pub fn part1(input: &Vec<(usize, usize)>) -> u32 {
+pub fn part1(input: &Vec<(u64, u64)>) -> u64 {
     let input2 = expand(input, 1);
+    paired_distances_summed(&input2)
+}
+
+fn paired_distances_summed(input: &Vec<(u64, u64)>) -> u64 {
     let mut count = 0;
-    for (i, pos) in input2.iter().enumerate() {
+    for (i, pos) in input.iter().enumerate() {
         // println!("PAIR: {:?} => {:?}", i, pos);
-        for other in input2[i + 1..].iter() {
+        for other in input[i + 1..].iter() {
             let dist =
-                (pos.0 as i32 - other.0 as i32).abs() + (pos.1 as i32 - other.1 as i32).abs();
+                (pos.0 as i64 - other.0 as i64).abs() + (pos.1 as i64 - other.1 as i64).abs();
             // println!("  OTHER: {:?} -> {:?}", other, dist);
             count += dist;
         }
     }
-    count as u32
+    count as u64
 }
 
-pub fn expand(input: &Vec<(usize, usize)>, expansion: usize) -> Vec<(usize, usize)> {
+#[aoc(day11, part2)]
+pub fn part2(input: &Vec<(u64, u64)>) -> u64 {
+    let input2 = expand(input, 1000000 - 1);
+    paired_distances_summed(&input2)
+}
+
+pub fn expand(input: &Vec<(u64, u64)>, expansion: u64) -> Vec<(u64, u64)> {
     let mut out = input.clone();
-    for i in (0..out.len()).rev() {
+    for i in (0..out.len() as u64).rev() {
         if !out.iter().any(|pair| pair.0 == i) {
-            println!("EXPAND 0: {}", i);
+            // println!("EXPAND 0: {}", i);
             for pair in out.iter_mut() {
                 if pair.0 > i {
                     pair.0 += expansion;
@@ -32,7 +42,7 @@ pub fn expand(input: &Vec<(usize, usize)>, expansion: usize) -> Vec<(usize, usiz
             }
         }
         if !out.iter().any(|pair| pair.1 == i) {
-            println!("EXPAND 1: {}", i);
+            // println!("EXPAND 1: {}", i);
             for pair in out.iter_mut() {
                 if pair.1 > i {
                     pair.1 += expansion;
@@ -43,12 +53,12 @@ pub fn expand(input: &Vec<(usize, usize)>, expansion: usize) -> Vec<(usize, usiz
     out
 }
 
-pub fn find_hashes(input: &Vec<Vec<u8>>) -> Vec<(usize, usize)> {
+pub fn find_hashes(input: &Vec<Vec<u8>>) -> Vec<(u64, u64)> {
     let mut arr = Vec::new();
     for i in 0..input.len() {
         for j in 0..input[i].len() {
             if input[i][j] == '#' as u8 {
-                arr.push((i, j));
+                arr.push((i as u64, j as u64));
             }
         }
     }
@@ -60,7 +70,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn part1_example() {
+    fn parts_example() {
         let input = parse_input_day11(
             "...#......\n\
             .......#..\n\
@@ -74,6 +84,12 @@ mod tests {
             #...#.....",
         );
         assert_eq!(part1(&input), 374);
+
+        let input10 = expand(&input, 10 - 1);
+        assert_eq!(paired_distances_summed(&input10), 1030);
+
+        let input100 = expand(&input, 100 - 1);
+        assert_eq!(paired_distances_summed(&input100), 8410);
     }
 
     #[test]
