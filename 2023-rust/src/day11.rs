@@ -21,6 +21,10 @@ pub fn expand_rows(input: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
         .collect()
 }
 
+pub fn expand_columns(input: Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+    input
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -43,7 +47,7 @@ mod tests {
     }
 
     #[test]
-    fn expand_example() {
+    fn expand_rows_example() {
         assert_eq!(expand_rows(vec!(b"".to_vec())), [[]]);
         assert_eq!(expand_rows(vec!(b".#.".to_vec())), [b".#.".to_vec()]);
         assert_eq!(
@@ -59,5 +63,10 @@ mod tests {
                 b".#.".to_vec()
             ]
         );
+    }
+    #[test]
+    fn expand_columns_example() {
+        assert_eq!(expand_columns(vec!(b"".to_vec())), [[]]);
+        assert_eq!(expand_columns(vec!(b"#.#.".to_vec())), [b"#..#..".to_vec()]);
     }
 }
