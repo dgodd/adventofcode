@@ -6,7 +6,7 @@ fn parse_input_day11(input: &str) -> Vec<(usize, usize)> {
 
 #[aoc(day11, part1)]
 pub fn part1(input: &Vec<(usize, usize)>) -> u32 {
-    let input2 = expand(input);
+    let input2 = expand(input, 1);
     let mut count = 0;
     for (i, pos) in input2.iter().enumerate() {
         // println!("PAIR: {:?} => {:?}", i, pos);
@@ -20,14 +20,14 @@ pub fn part1(input: &Vec<(usize, usize)>) -> u32 {
     count as u32
 }
 
-pub fn expand(input: &Vec<(usize, usize)>) -> Vec<(usize, usize)> {
+pub fn expand(input: &Vec<(usize, usize)>, expansion: usize) -> Vec<(usize, usize)> {
     let mut out = input.clone();
     for i in (0..out.len()).rev() {
         if !out.iter().any(|pair| pair.0 == i) {
             println!("EXPAND 0: {}", i);
             for pair in out.iter_mut() {
                 if pair.0 > i {
-                    pair.0 += 1;
+                    pair.0 += expansion;
                 }
             }
         }
@@ -35,24 +35,12 @@ pub fn expand(input: &Vec<(usize, usize)>) -> Vec<(usize, usize)> {
             println!("EXPAND 1: {}", i);
             for pair in out.iter_mut() {
                 if pair.1 > i {
-                    pair.1 += 1;
+                    pair.1 += expansion;
                 }
             }
         }
     }
     out
-}
-
-pub fn expand_columns(input: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
-    let mut input2 = input.clone();
-    for i in (0..input[0].len()).rev() {
-        if input.iter().all(|row| row[i] == '.' as u8) {
-            for row in input2.iter_mut() {
-                row.insert(i, '.' as u8);
-            }
-        }
-    }
-    input2.clone()
 }
 
 pub fn find_hashes(input: &Vec<Vec<u8>>) -> Vec<(usize, usize)> {
@@ -73,26 +61,25 @@ mod tests {
 
     #[test]
     fn part1_example() {
-        let input = vec![
-            b"...#......".to_vec(),
-            b".......#..".to_vec(),
-            b"#.........".to_vec(),
-            b"..........".to_vec(),
-            b"......#...".to_vec(),
-            b".#........".to_vec(),
-            b".........#".to_vec(),
-            b"..........".to_vec(),
-            b".......#..".to_vec(),
-            b"#...#.....".to_vec(),
-        ];
-        let hashes = find_hashes(&input);
-        assert_eq!(part1(&hashes), 374);
+        let input = parse_input_day11(
+            "...#......\n\
+            .......#..\n\
+            #.........\n\
+            ..........\n\
+            ......#...\n\
+            .#........\n\
+            .........#\n\
+            ..........\n\
+            .......#..\n\
+            #...#.....",
+        );
+        assert_eq!(part1(&input), 374);
     }
 
     #[test]
     fn expand_example() {
-        assert_eq!(expand(&vec!((0, 0), (0, 2))), [(0, 0), (0, 3)]);
-        assert_eq!(expand(&vec!((0, 0), (2, 0))), [(0, 0), (3, 0)]);
+        assert_eq!(expand(&vec!((0, 0), (0, 2)), 1), [(0, 0), (0, 3)]);
+        assert_eq!(expand(&vec!((0, 0), (2, 0)), 1), [(0, 0), (3, 0)]);
     }
 
     #[test]
