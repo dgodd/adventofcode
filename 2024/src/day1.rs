@@ -1,5 +1,3 @@
-use indoc::indoc;
-
 #[aoc_generator(day1)]
 pub fn input_generator(input: &str) -> (Vec<i64>, Vec<i64>) {
     let mut list1 = Vec::new();
@@ -39,6 +37,7 @@ pub fn part2(input: &(Vec<i64>, Vec<i64>)) -> i64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use indoc::indoc;
 
     #[test]
     fn find_numbers_example() {
