@@ -5,16 +5,19 @@ GEM
     minitest (5.20.0)
     minitest-focus (1.4.0)
       minitest (>= 4, < 6)
-    nokogiri (1.15.5-arm64-darwin)
+    nokogiri (1.16.5-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.5-x86_64-linux)
       racc (~> 1.4)
     parallel (1.23.0)
     progressbar (1.13.0)
-    racc (1.7.3)
+    racc (1.8.1)
     reverse_markdown (2.1.1)
       nokogiri
 
 PLATFORMS
   arm64-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   excon
