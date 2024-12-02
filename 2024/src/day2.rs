@@ -30,18 +30,20 @@ pub fn part2(input: &Vec<Vec<i64>>) -> i64 {
 }
 
 pub fn is_safe(levels: &Vec<i64>) -> bool {
-    let mut sorted = levels.clone();
-    sorted.sort();
-    let mut reversed = levels.clone();
-    reversed.sort_by(|a, b| b.cmp(a));
+    let diffs = levels
+        .windows(2)
+        .map(|arr| (arr[0] - arr[1]))
+        .collect::<Vec<_>>();
+    let all_incr = diffs.iter().all(|a| *a >= 0);
+    let all_decr = diffs.iter().all(|a| *a <= 0);
 
-    if &sorted != levels && &reversed != levels {
+    if !(all_incr || all_decr) {
         return false;
     }
 
-    levels.windows(2).all(|arr| {
-        let a = (arr[0] - arr[1]).abs();
-        return a >= 1 && a <= 3;
+    diffs.iter().all(|a| {
+        let b = a.abs();
+        return b >= 1 && b <= 3;
     })
 }
 
@@ -68,7 +70,7 @@ mod tests {
     use indoc::indoc;
 
     #[test]
-    fn find_numbers_example() {
+    fn test_part1_sample() {
         let input = indoc! {"
             7 6 4 2 1
             1 2 7 8 9
@@ -82,7 +84,7 @@ mod tests {
     }
 
     #[test]
-    fn test_safe() {
+    fn test_is_safe() {
         assert_eq!(is_safe(&vec![7, 6, 4, 2, 1]), true);
         assert_eq!(is_safe(&vec![1, 2, 7, 8, 9]), false);
         assert_eq!(is_safe(&vec![9, 7, 6, 2, 1]), false);
