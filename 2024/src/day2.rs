@@ -1,30 +1,27 @@
-// #[aoc_generator(day2)]
-// pub fn input_generator(input: &str) -> (Vec<i64>, Vec<i64>) {
-// }
+#[aoc_generator(day2)]
+pub fn input_generator(input: &str) -> Vec<Vec<i64>> {
+    let out: Vec<Vec<i64>> = input
+        .lines()
+        .map(|line| {
+            line.split_whitespace()
+                .map(|s| s.parse().unwrap())
+                .collect()
+        })
+        .collect();
+    out
+}
 
 #[aoc(day2, part1)]
-pub fn part1(input: &str) -> u64 {
-    input.lines().fold(0, |sum, line| {
-        let levels: Vec<u64> = line
-            .split_whitespace()
-            .map(|s| s.parse().unwrap())
-            .collect();
-        if is_safe(&levels) {
-            sum + 1
-        } else {
-            sum
-        }
-    })
+pub fn part1(input: &Vec<Vec<i64>>) -> i64 {
+    input
+        .iter()
+        .fold(0, |sum, levels| if is_safe(levels) { sum + 1 } else { sum })
 }
 
 #[aoc(day2, part2)]
-pub fn part2(input: &str) -> u64 {
-    input.lines().fold(0, |sum, line| {
-        let levels: Vec<u64> = line
-            .split_whitespace()
-            .map(|s| s.parse().unwrap())
-            .collect();
-        if safe_with_removal(&levels) {
+pub fn part2(input: &Vec<Vec<i64>>) -> i64 {
+    input.iter().fold(0, |sum, levels| {
+        if safe_with_removal(levels) {
             sum + 1
         } else {
             sum
@@ -32,7 +29,7 @@ pub fn part2(input: &str) -> u64 {
     })
 }
 
-pub fn is_safe(levels: &Vec<u64>) -> bool {
+pub fn is_safe(levels: &Vec<i64>) -> bool {
     let mut sorted = levels.clone();
     sorted.sort();
 
@@ -54,7 +51,7 @@ pub fn is_safe(levels: &Vec<u64>) -> bool {
     return (all_increasing || all_decreasing) && diffs;
 }
 
-pub fn safe_with_removal(levels: &Vec<u64>) -> bool {
+pub fn safe_with_removal(levels: &Vec<i64>) -> bool {
     if is_safe(levels) {
         return true;
     }
@@ -87,7 +84,7 @@ mod tests {
             1 3 6 7 9
         "};
         println!("{}", input);
-        assert_eq!(part1(&input), 2);
+        assert_eq!(part1(&input_generator(input)), 2);
     }
 
     #[test]
