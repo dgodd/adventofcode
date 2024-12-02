@@ -32,23 +32,17 @@ pub fn part2(input: &Vec<Vec<i64>>) -> i64 {
 pub fn is_safe(levels: &Vec<i64>) -> bool {
     let mut sorted = levels.clone();
     sorted.sort();
+    let mut reversed = levels.clone();
+    reversed.sort_by(|a, b| b.cmp(a));
 
-    let mut revsersed = levels.clone();
-    revsersed.sort_by(|a, b| b.cmp(a));
+    if &sorted != levels && &reversed != levels {
+        return false;
+    }
 
-    let all_increasing = &sorted == levels;
-    let all_decreasing = &revsersed == levels;
-
-    let diffs = levels
-        .iter()
-        .map(|a| (*a as i64))
-        .collect::<Vec<_>>()
-        .windows(2)
-        .map(|arr| (arr[0] - arr[1]).abs())
-        .all(|a| a >= 1 && a <= 3);
-    // println!("DIFFS: {:?} => {:?}", levels, diffs);
-
-    return (all_increasing || all_decreasing) && diffs;
+    levels.windows(2).all(|arr| {
+        let a = (arr[0] - arr[1]).abs();
+        return a >= 1 && a <= 3;
+    })
 }
 
 pub fn safe_with_removal(levels: &Vec<i64>) -> bool {
