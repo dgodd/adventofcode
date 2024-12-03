@@ -17,29 +17,43 @@ pub fn part1_loop(input: &str) -> i64 {
     let mut a: i64 = 0;
     let mut b: i64 = 0;
     for x in input.chars() {
-        if x == 'm' {
-            state = 1;
-        } else if state == 1 && x == 'u' {
-            state = 2;
-        } else if state == 2 && x == 'l' {
-            state = 3;
-        } else if state == 3 && x == '(' {
-            state = 4;
-        } else if state == 4 && x >= '0' && x <= '9' {
-            a = (a * 10) + (x as usize - '0' as usize) as i64;
-        } else if state == 4 && x == ',' {
-            state = 5;
-        } else if state == 5 && x >= '0' && x <= '9' {
-            b = (b * 10) + (x as usize - '0' as usize) as i64;
-        } else if state == 5 && x == ')' {
-            sum += a * b;
-            state = 0;
-            a = 0;
-            b = 0;
-        } else {
-            state = 0;
-            a = 0;
-            b = 0;
+        match (state, x) {
+            (_, 'm') => state = 1,
+            (1, 'u') => state = 2,
+            (2, 'l') => state = 3,
+            (3, '(') => state = 4,
+            (4, '0') => a = a * 10,
+            (4, '1') => a = a * 10 + 1,
+            (4, '2') => a = a * 10 + 2,
+            (4, '3') => a = a * 10 + 3,
+            (4, '4') => a = a * 10 + 4,
+            (4, '5') => a = a * 10 + 5,
+            (4, '6') => a = a * 10 + 6,
+            (4, '7') => a = a * 10 + 7,
+            (4, '8') => a = a * 10 + 7,
+            (4, '9') => a = a * 10 + 9,
+            (4, ',') => state = 5,
+            (5, '0') => b = b * 10,
+            (5, '1') => b = b * 10 + 1,
+            (5, '2') => b = b * 10 + 2,
+            (5, '3') => b = b * 10 + 3,
+            (5, '4') => b = b * 10 + 4,
+            (5, '5') => b = b * 10 + 5,
+            (5, '6') => b = b * 10 + 6,
+            (5, '7') => b = b * 10 + 7,
+            (5, '8') => b = b * 10 + 7,
+            (5, '9') => b = b * 10 + 9,
+            (5, ')') => {
+                sum += a * b;
+                state = 0;
+                a = 0;
+                b = 0;
+            }
+            _ => {
+                state = 0;
+                a = 0;
+                b = 0;
+            }
         }
     }
     sum
